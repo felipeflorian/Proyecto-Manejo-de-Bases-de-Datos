@@ -1,33 +1,50 @@
 import pandas as pd
 import psycopg2
-#geopandas
 
 #Funciones para la insercion de los datos
 def Insert_Equipo(tip, lat, lon, dir, dep, mun):
     instruccion = "insert into Equipo(tipo_equipo,latitud,longitud,direccion,departamento,municipio) values('" + str(tip) + "','" + str(lat) + "','" + str(lon) + "','" + str(dir) + "','" + str(dep) + "','" + str(mun) + "');"
     return instruccion
 
-def Insert_tipoMulta(cod,tip):
-    instruccion = "insert into tipoMulta values('" + str(cod) + "','" + str(tip) +"');"
-    return instruccion
+def count(l):
+    count = 0
+    for i in l:
+        if i == '.':
+            count += 1
 
-def Insert_Multa(cod, lat, lon):
-    instruccion = "insert into Multa values('" + str(cod) + "','" + str(lat) + "','" + str(lon) + "');"
-    return instruccion
+    if count == 2:
+        return True
+    else:
+        return False
+
+def quitar(l):
+    x = ""
+    count = 0
+    for i in l:
+        if i != '.':
+            x += i
+        if i == '.':
+            count += 1
+        if count == 1:
+            x += i
+    return x
+
 
 #Se cargan los archivos con la información de las camaras de fotomultas.
 data_set = pd.read_csv('Equipos_de_Fotodeteccion.csv',sep=';',encoding='latin1').fillna('-')
-multas = pd.read_csv('tipoMultas.csv',sep=';', encoding='latin1')
 
 Multa = []
 tipoMulta = []
 Equipo = []
 
 for (index, datos) in data_set.iterrows():
-    Equipo.append(Insert_Equipo(datos['Tipo Equipo'],datos['Latitud'],datos['Longitud'],datos['Direccion'],datos['Departamento'],datos['Municipio']))
-
-for (index, datos) in multas.iterrows():
-    tipoMulta.append(Insert_tipoMulta(datos['Codigo'],datos['Descripcion']))
+    x = datos['Latitud']
+    y = datos['Longitud']
+    if count(x)==True:
+        x = quitar(x)
+    if count(y)==True:
+        y = quitar(y)
+    Equipo.append(Insert_Equipo(datos['Tipo Equipo'],x,y,datos['Direccion'],datos['Departamento'],datos['Municipio']))
 
 #Parametros para la conexion
 hostname = 'drona.db.elephantsql.com'
@@ -48,10 +65,7 @@ try:
 	# ejecutar un comando SQL en la base de datos
   for i in range(len(Equipo)):
       cursorDB.execute(Equipo[i])
-
-  for j in range(len(tipoMulta)):
-      cursorDB.execute(tipoMulta[j])
-
+      
   #almacenar en la variable resultado todo el contenido del query
   DBConnection.commit();
   # cerrar la conexión a la base de datos

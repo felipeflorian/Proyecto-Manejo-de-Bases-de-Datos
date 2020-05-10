@@ -1,6 +1,7 @@
-Descripcion;Codigo
-Conducir un vehiculo a velocidad superior a la permitida;C29
-No detenerse ante luz roja o amarilla de sem foro,una se¤al de PARE, un semaforo intermitente en rojo;D04
-Adelantar a otro vehiculo en berma,tune,puente,curva,pasos a nivel y cruces no regulados.;D06
-Transitar en sentido contrario al estipulado para la via;D03
-Estacionar un vehiculo en sitios prohibidos;35
+Descripcion;Codigo;Monto
+Conducir un vehiculo a velocidad superior a la permitida;C29;438000
+No detenerse ante luz roja o amarilla de sem foro,una se¤al de PARE, un semaforo intermitente en rojo;D04;877803
+Adelantar a otro vehiculo en berma,tune,puente,curva,pasos a nivel y cruces no regulados.;D06;828100
+Transitar en sentido contrario al estipulado para la via;D03;930657
+Estacionar un vehiculo en sitios prohibidos;C02;465000
+Conducir en dia de pico y placa;D10;438900

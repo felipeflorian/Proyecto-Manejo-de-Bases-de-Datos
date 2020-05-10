@@ -74,7 +74,7 @@ for i in range(200):
     edad = rng.randrange(16,80)
     dia = rng.randrange(30)
     mes = rng.randrange(12)
-    a = "2020"
+    a = "2019"
     fecha = str(dia) + "/" + str(mes) + "/" + a
     t1 = rng.choice(tipo1)
     a1 = rng.randrange(0,len(lat_lon1))
@@ -96,14 +96,13 @@ for i in range(200):
     edad = rng.randrange(16,80)
     dia = rng.randrange(30)
     mes = rng.randrange(12)
-    a = "2020"
-    fecha = str(dia) + "/" + str(mes) + "/" + a
+    fech =   str(mes) + "/" + str(dia) + "/" + "2019"
     t2 = rng.choice(tipo2)
-    a1 = rng.randrange(0,len(lat_lon1))
-    a2 = rng.randrange(0,len(lat_lon2))
+    a1 = rng.randrange(1,len(lat_lon1))
+    a2 = rng.randrange(1,len(lat_lon2))
     f1 = lat_lon1[a1]
     f2 = lat_lon2[a2]
-    in1 = Insert_Multa(edad, placa, fecha,t2,f1[0],f1[1])
+    in1 = Insert_Multa(edad, placa, fech,t2,f1[0],f1[1])
     In_multas.append(in1)
 
 

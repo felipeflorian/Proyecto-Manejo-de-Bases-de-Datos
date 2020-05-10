@@ -46,6 +46,7 @@ for (index, datos) in data_set.iterrows():
         y = quitar(y)
     Equipo.append(Insert_Equipo(datos['Tipo Equipo'],x,y,datos['Direccion'],datos['Departamento'],datos['Municipio']))
 
+
 #Parametros para la conexion
 hostname = 'drona.db.elephantsql.com'
 username = 'kopfshah'
@@ -65,7 +66,7 @@ try:
 	# ejecutar un comando SQL en la base de datos
   for i in range(len(Equipo)):
       cursorDB.execute(Equipo[i])
-      
+
   #almacenar en la variable resultado todo el contenido del query
   DBConnection.commit();
   # cerrar la conexión a la base de datos

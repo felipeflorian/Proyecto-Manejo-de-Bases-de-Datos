@@ -23,7 +23,6 @@ create table Multa
  codigo_multa varchar not null,
  latitud varchar not null,
  longitud varchar not null,
- foreign key(latitud) references equipo,
  foreign key(codigo_multa) references tipoMulta);
 
 create or replace function multasMenoresDe(edad1 varchar)

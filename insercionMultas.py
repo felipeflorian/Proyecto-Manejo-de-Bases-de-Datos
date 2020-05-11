@@ -2,8 +2,8 @@ import random as rng
 import pandas as pd
 import psycopg2
 
-def Insert_Multa(edad, pl, fecha, cod, lat, lon):
-    instruccion = "insert into Multa(edad, placa, fecha,codigo_multa,latitud,longitud) values('"+ str(edad) + "','" + str(pl) + "','" + str(fecha) + "','" + str(cod) + "','" + str(lat) + "','" + str(lon) + "');"
+def Insert_Multa(edad, pl, fecha, cod, lat, lon, est):
+    instruccion = "insert into Multa(edad, placa, fecha,codigo_multa,latitud,longitud,estado) values('"+ str(edad) + "','" + str(pl) + "','" + str(fecha) + "','" + str(cod) + "','" + str(lat) + "','" + str(lon) + "','" + str(est) + "');"
     return instruccion
 
 def count(l):
@@ -62,6 +62,7 @@ for (index, datos) in multasTipo2.iterrows():
 
 In_multas = []
 letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+pago = ["PAGADA","PENDIENTE"]
 
 for i in range(200):
     placa = ""
@@ -81,7 +82,8 @@ for i in range(200):
     a2 = rng.randrange(0,len(lat_lon2))
     f1 = lat_lon1[a1]
     f2 = lat_lon2[a2]
-    in1 = Insert_Multa(edad, placa, fecha,t1,f1[0],f1[1])
+    est = rng.choice(pago)
+    in1 = Insert_Multa(edad, placa, fecha,t1,f1[0],f1[1],est)
     In_multas.append(in1)
 
 
@@ -102,7 +104,8 @@ for i in range(200):
     a2 = rng.randrange(1,len(lat_lon2))
     f1 = lat_lon1[a1]
     f2 = lat_lon2[a2]
-    in1 = Insert_Multa(edad, placa, fech,t2,f1[0],f1[1])
+    est = rng.choice(pago)
+    in1 = Insert_Multa(edad, placa, fech,t2,f2[0],f2[1],est)
     In_multas.append(in1)
 
 

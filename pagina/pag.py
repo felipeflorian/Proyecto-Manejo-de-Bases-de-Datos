@@ -54,7 +54,16 @@ def tiposDeMultas():
 
 @app.route('/multasDepartamentoRangoTiempo', methods = ['GET'])
 def MultasRangoTiempo():
-    return "HOLA"
+    return app.send_static_file("busquedaPorFechaDepartamento.html")
+
+@app.route('/multasPorFechaDep', methods = ['GET','POST'])
+def multasPorFecha():
+    dep = request.values.get("Departamento")
+    f1 = request.values.get("f1")
+    f2 = request.values.get("f2")
+    query = "SELECT * FROM numeroMultasTiempo_departamento('" + f1 + "','" + f2 + "','" + dep + "')"
+    contenido = queryComoDataFrame(query)
+    return "<p>" + contenido.to_html() + "</p>"
 
 @app.route('/multasEnElDepartamento', methods = ['GET'])
 def Departamento():
@@ -66,6 +75,7 @@ def resultadosDepartamento():
     query = "SELECT * FROM multasPorDepartamento('" + valor + "')"
     contenido = queryComoDataFrame(query)
     return "<p>" + contenido.to_html() + "</p>"
+
 
 
 @app.route('/multasDepartamento', methods=['GET'])
@@ -84,5 +94,17 @@ def resultado():
     contenido = queryComoDataFrame(query)
     return "<p>" + contenido.to_html() + "</p>"
 
+@app.route('/MultasMenores18')
+def multas_menores():
+    query = "SELECT * FROM multasMenoresDe('18')"
+    contenido = queryComoDataFrame(query)
+    return "<p>" + contenido.to_html() + "</p>"
+
+@app.route('/MultasMayores60')
+def multas_mayores():
+    query = "SELECT * FROM multasMayoresDe('60')"
+    contenido = queryComoDataFrame(query)
+    return "<p>" + contenido.to_html() + "</p>"
+    
 if __name__ == "__main__":
     app.run()

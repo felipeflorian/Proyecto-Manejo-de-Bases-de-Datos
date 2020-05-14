@@ -28,43 +28,43 @@ create table Multa
  foreign key(codigo_multa) references tipoMulta);
 
 create or replace function multasMenoresDe(edad1 varchar)
-RETURNS TABLE (codMulta varchar, numero_multas bigint, e varchar) as $$
+RETURNS TABLE (codMulta varchar, cantidad_multas bigint, edad varchar) as $$
 BEGIN
   RETURN QUERY select
-    codigo_multa,
-    count(edad),
-    edad
+    multa.codigo_multa,
+    count(multa.edad),
+    multa.edad
   from
     multa
   where
-    edad < edad1
-  group by edad, codigo_multa;
+    multa.edad < edad1
+  group by multa.edad, multa.codigo_multa;
 END;
 $$ LANGUAGE plpgsql;
 
 create or replace function multasMayoresDe(edad1 varchar)
-RETURNS TABLE (codMulta varchar, numero_multas bigint, cantidad_multas varchar) as $$
+RETURNS TABLE (codMulta varchar, cantidad_multas bigint, edad varchar) as $$
 BEGIN
   RETURN QUERY select
-    codigo_multa,
-    count(edad),
-    edad
+    multa.codigo_multa,
+    count(multa.edad),
+    multa.edad
   from
     multa
   where
-    edad > edad1
-  group by edad, codigo_multa;
+    multa.edad > edad1
+  group by multa.edad, multa.codigo_multa;
 END;
 $$ LANGUAGE plpgsql;
 
-create or replace function busquedaPorPlac(pla varchar)
-RETURNS TABLE (placa varchar, codigo_multa varchar, direccion varchar) as $$
+create or replace function busquedaPorPlaca(pla varchar)
+RETURNS TABLE (Estado varchar, Placa varchar, Codigo_multa varchar, tipo_multa varchar, monto integer) as $$
 BEGIN
   RETURN QUERY
-  SELECT multa.placa, tipomulta.codigo_multa, equipo.direccion
-  FROM multa JOIN tipoMulta ON multa.codigo_multa = tipoMulta.codigo_multa
-           JOIN equipo ON equipo.latitud = multa.latitud
-  where multa.placa = pla;
+  SELECT multa.estado, multa.placa, tipomulta.codigo_multa, tipomulta.tipo_multa, tipomulta.monto
+  from multa join tipomulta on multa.codigo_multa = tipomulta.codigo_multa
+  where multa.placa = pla
+  group by multa.estado,tipomulta.codigo_multa,tipomulta.tipo_multa, tipomulta.monto, multa.placa;
 END;
 $$ LANGUAGE plpgsql;
 
@@ -76,7 +76,7 @@ BEGIN
   where multa.codigo_multa = cod
   group by tipomulta.monto;
 END;
-
+$$ LANGUAGE plpgsql;
 
 create or replace procedure pago(pla varchar)
 LANGUAGE plpgsql
@@ -85,7 +85,6 @@ begin
   update multa
   set estado = 'PAGADA'
   where multa.placa = pla;
-commit;
 end;
 $$
 

@@ -37,9 +37,41 @@ def queryComoDataFrame(Query):
     print('en caso finally: query ejecutado, resultados en un data frame.')
 
 
+def cambioEstado(est, pla):
+
+    if est == "SI":
+
+        try:
+          # conectar usando el método connect de pyscopg2
+          print('Connecting to the PostgreSQL database...')
+          DBConnection = psycopg2.connect(**parametrosDict)
+
+          # crear un cursor para ejecutar comandos dentro de la D
+          cursorDB = DBConnection.cursor()
+          query = "CALL pago('" + pla + "');"
+          plac = "'" + pla  + "'"
+          #cursorDB.callproc('pago', (plac,))
+          cursorDB.execute(query)
+
+          #almacenar en la variable resultado todo el contenido del query
+          DBConnection.commit();
+          # cerrar la conexión a la base de datos
+          DBConnection.close()
+        #si hay un error en la conexión informar
+        except (Exception, psycopg2.DatabaseError) as error:
+                print('Error encontrado:',error)
+        #si algo no ha sido cubierto en los casos anteriores, cerrar la conexión a la base de datos
+        finally:
+            if DBConnection is not None:
+                DBConnection.close()
+                print('en caso finally: cerrando la conexión a la DB.')
+        return "Estado nuevo de la placa: " + pla + "pagado."
+
+    else:
+        return "No hay cambios en el estado para la placa " + pla + "."
+
 @app.route('/',methods=['GET'])
 def paginaInicial():
-    #c= <a href="prueba.html">prueba</a>
     return render_template('hipervinculos.html')
 
 @app.route('/tipoMultas',methods=['GET'])
@@ -94,17 +126,33 @@ def resultado():
     contenido = queryComoDataFrame(query)
     return "<p>" + contenido.to_html() + "</p>"
 
-@app.route('/MultasMenores18')
+@app.route('/MultasMenores18', methods = ['GET'])
 def multas_menores():
     query = "SELECT * FROM multasMenoresDe('18')"
     contenido = queryComoDataFrame(query)
     return "<p>" + contenido.to_html() + "</p>"
 
-@app.route('/MultasMayores60')
+@app.route('/MultasMayores60', methods = ['GET'])
 def multas_mayores():
     query = "SELECT * FROM multasMayoresDe('60')"
     contenido = queryComoDataFrame(query)
     return "<p>" + contenido.to_html() + "</p>"
-    
+
+@app.route('/actualizacionMultas', methods = ['GET'])
+def actualizacion_multas():
+    return app.send_static_file('actualizacionMultas.html')
+
+@app.route('/estadoMulta', methods = ['GET','POST'])
+def nuevo_estado_multa():
+    placa = request.values.get("placa")
+    print("placa")
+    valor = request.values.get("estado")
+    valor = valor.upper()
+    if valor == 'SI':
+        return cambioEstado(valor,placa)
+    else:
+        return "No se realizaron cambios de estado a la placa " + placa + "."
+
+
 if __name__ == "__main__":
     app.run()
